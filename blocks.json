@@ -82,7 +82,12 @@
         "2": "tallgrassFlower2",
         "4": "biggrass"
       },
-      "geometry": "plant"
+      "geometry": "plant",
+      "box":{
+        "w":0,
+        "h":0,
+        "d":0
+      }
     },
     "behavior": {
       "surface": {
