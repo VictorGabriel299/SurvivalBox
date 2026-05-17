@@ -17,7 +17,7 @@
         "elasticity": 0.05
       },
       "structure": {
-        "mass": 50,
+        "mass": 1500,
         "support": false
       },
       "breaking": {
