@@ -1,103 +1,103 @@
 {
-  1: {
-      "definitions":{
-          "id":"grass",
-          "textures":{
-              0: "grass",
-              1: "grassClover",
-              2: "grassFlower1",
-              3: "grassFlower2",
-              4: "grassFlower3"
-          },
-          "geometry": "block"
+  "1": {
+    "definitions": {
+      "id": "grass",
+      "textures": {
+        "0": "grass",
+        "1": "grassClover",
+        "2": "grassFlower1",
+        "3": "grassFlower2",
+        "4": "grassFlower3"
       },
-      "behavior":{
-           "surface":{
-               "friction":0.85,
-               "elasticity":0.05
-           },
-           "structure":{
-               "mass":50,
-               "support":false
-           },
-           "breaking":{
-               "duration":200,
-               "method":"dig"
-           }
-        }
+      "geometry": "block"
     },
-    2: {
-      "definitions":{
-          "id":"dirt",
-          "textures":{
-              0: "dirt",
-              1: "grassCover"
-          },
-          "geometry": "block"
+    "behavior": {
+      "surface": {
+        "friction": 0.85,
+        "elasticity": 0.05
       },
-      "behavior":{
-           "surface":{
-               "friction":0.75,
-               "elasticity":0.2
-           },
-           "structure":{
-               "mass":1500,
-               "support":true
-           },
-           "breaking":{
-               "duration":600,
-               "method":"dig"
-           }
-        }
-    },
-    3: {
-      "definitions":{
-          "id":"stone",
-          "textures":{
-              0: "stone",
-          },
-          "geometry": "block"
+      "structure": {
+        "mass": 50,
+        "support": false
       },
-      "behavior":{
-           "surface":{
-               "friction":0.9,
-               "elasticity":0.05
-           },
-           "structure":{
-               "mass":2600,
-               "support":true
-           },
-           "breaking":{
-               "duration":1200,
-               "method":"quarry"
-           }
-        }
-    },
-    4: {
-      "definitions":{
-          "id":"tallgrass",
-          "textures":{
-              0: "tallgrass",
-              1: "tallgrassFlower1",
-              2: "tallgrassFlower2",
-              4: "biggrass",
-          },
-          "geometry": "plant"
-      },
-      "behavior":{
-           "surface":{
-               "friction":0.2,
-               "elasticity":0.05
-           },
-           "structure":{
-               "mass":0,
-               "support":false,
-               "floors":[ 1, 2 ]
-           },
-           "breaking":{
-               "duration":800,
-               "method":"cut"
-           }
-        }
+      "breaking": {
+        "duration": 200,
+        "method": "dig"
+      }
     }
+  },
+  "2": {
+    "definitions": {
+      "id": "dirt",
+      "textures": {
+        "0": "dirt",
+        "1": "grassCover"
+      },
+      "geometry": "block"
+    },
+    "behavior": {
+      "surface": {
+        "friction": 0.75,
+        "elasticity": 0.2
+      },
+      "structure": {
+        "mass": 1500,
+        "support": true
+      },
+      "breaking": {
+        "duration": 600,
+        "method": "dig"
+      }
+    }
+  },
+  "3": {
+    "definitions": {
+      "id": "stone",
+      "textures": {
+        "0": "stone"
+      },
+      "geometry": "block"
+    },
+    "behavior": {
+      "surface": {
+        "friction": 0.9,
+        "elasticity": 0.05
+      },
+      "structure": {
+        "mass": 2600,
+        "support": true
+      },
+      "breaking": {
+        "duration": 1200,
+        "method": "quarry"
+      }
+    }
+  },
+  "4": {
+    "definitions": {
+      "id": "tallgrass",
+      "textures": {
+        "0": "tallgrass",
+        "1": "tallgrassFlower1",
+        "2": "tallgrassFlower2",
+        "4": "biggrass"
+      },
+      "geometry": "plant"
+    },
+    "behavior": {
+      "surface": {
+        "friction": 0.2,
+        "elasticity": 0.05
+      },
+      "structure": {
+        "mass": 0,
+        "support": false,
+        "floors": [1, 2]
+      },
+      "breaking": {
+        "duration": 800,
+        "method": "cut"
+      }
+    }
+  }
 }
