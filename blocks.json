@@ -80,7 +80,7 @@
         "0": "tallgrass",
         "1": "tallgrassFlower1",
         "2": "tallgrassFlower2",
-        "4": "biggrass"
+        "3": "biggrass"
       },
       "geometry": "plant",
       "box":{
