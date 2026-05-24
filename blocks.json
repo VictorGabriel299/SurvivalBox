@@ -43,10 +43,10 @@
         "definitions":{
           "textures": {
             "0": "grassDesert",
-            "1": "grassClover",
-            "2": "grassFlower1",
-            "3": "grassFlower2",
-            "4": "grassFlower3"
+            "1": "grassTermite1",
+            "2": "grassTermite2",
+            "3": "grassDLeaf",
+            "4": "grassFeather"
           }
         }
       }
