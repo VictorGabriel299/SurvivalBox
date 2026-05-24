@@ -24,7 +24,8 @@
         "duration": 200,
         "method": "dig"
       }
-    }
+    },
+    "states":{}
   },
   "2": {
     "definitions": {
