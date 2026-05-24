@@ -30,7 +30,11 @@
         "conditions":"v1 === 1",
         "definitions":{
           "textures": {
-            "0": "dirt"
+            "0": "grassJungle",
+            "1": "grassClover",
+            "2": "grassFlower1",
+            "3": "grassFlower2",
+            "4": "grassFlower3"
           }
         }
       }
