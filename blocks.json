@@ -27,7 +27,7 @@
     },
     "states":[
       {
-        "conditions":"hum > 0.6 && temp > 0.6",
+        "conditions":"hum > 154 && temp > 154",
         "definitions":{
           "textures": {
             "0": "grassJungle",
@@ -39,7 +39,7 @@
         }
       },
       {
-        "conditions":"hum < 0.4 && temp > 0.6",
+        "conditions":"hum < 102 && temp > 154",
         "definitions":{
           "textures": {
             "0": "grassDesert",
