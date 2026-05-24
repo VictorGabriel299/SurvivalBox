@@ -130,5 +130,28 @@
         "method": "cut"
       }
     }
+  },
+  "5": {
+    "definitions": {
+      "id": "sand",
+      "textures": {
+        "0": "sand"
+      },
+      "geometry": "block"
+    },
+    "behavior": {
+      "surface": {
+        "friction": 0.45,
+        "elasticity": 0.05
+      },
+      "structure": {
+        "mass": 1300,
+        "support": false
+      },
+      "breaking": {
+        "duration": 250,
+        "method": "dig"
+      }
+    }
   }
 }
