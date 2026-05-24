@@ -27,10 +27,22 @@
     },
     "states":[
       {
-        "conditions":"v1 === 1",
+        "conditions":"hum > 0.6 && temp > 0.6",
         "definitions":{
           "textures": {
             "0": "grassJungle",
+            "1": "grassClover",
+            "2": "grassFlower1",
+            "3": "grassFlower2",
+            "4": "grassFlower3"
+          }
+        }
+      },
+      {
+        "conditions":"hum < 0.4 && temp > 0.6",
+        "definitions":{
+          "textures": {
+            "0": "grassDesert",
             "1": "grassClover",
             "2": "grassFlower1",
             "3": "grassFlower2",
