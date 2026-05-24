@@ -30,7 +30,7 @@
         "conditions":"v1 === 1",
         "definitions":{
           "textures": {
-          "0": "grassJungle"
+            "0": "dirt"
           }
         }
       }
