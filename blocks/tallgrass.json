@@ -1,0 +1,28 @@
+{
+    "definitions": {
+      "id":4,
+      "textures": {
+        "0": "tallgrass",
+        "1": "tallgrassFlower1",
+        "2": "tallgrassFlower2",
+        "3": "biggrass"
+      },
+      "geometry": "plant",
+      "box":{ "w":0, "h":0, "d":0 }
+    },
+    "behavior": {
+      "surface": {
+        "friction": 0.2,
+        "elasticity": 0.05
+      },
+      "structure": {
+        "mass": 0,
+        "support": false,
+        "floors": [1, 2]
+      },
+      "breaking": {
+        "duration": 800,
+        "method": "cut"
+      }
+    }
+  }

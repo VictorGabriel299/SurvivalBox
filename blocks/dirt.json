@@ -1,0 +1,24 @@
+{
+    "definitions": {
+      "id":2,
+      "textures": {
+        "0": "dirt",
+        "1": "grassCover"
+      },
+      "geometry": "block"
+    },
+    "behavior": {
+      "surface": {
+        "friction": 0.75,
+        "elasticity": 0.2
+      },
+      "structure": {
+        "mass": 1500,
+        "support": true
+      },
+      "breaking": {
+        "duration": 600,
+        "method": "dig"
+      }
+    }
+  }

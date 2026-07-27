@@ -1,0 +1,53 @@
+{
+   "definitions": {
+      "id":1,
+      "textures": {
+        "0": "grass",
+        "1": "grassClover",
+        "2": "grassFlower1",
+        "3": "grassFlower2",
+        "4": "grassFlower3"
+      },
+      "geometry": "block"
+    },
+    "behavior": {
+      "surface": {
+        "friction": 0.85,
+        "elasticity": 0.05
+      },
+      "structure": {
+        "mass": 1500,
+        "support": false
+      },
+      "breaking": {
+        "duration": 200,
+        "method": "dig"
+      }
+    },
+    "states":[
+      {
+        "conditions":"hum > 154 && temp > 154",
+        "definitions":{
+          "textures": {
+            "0": "grassJungle",
+            "1": "grassClover",
+            "2": "grassFlower1",
+            "3": "grassFlower2",
+            "4": "grassFlower3"
+          }
+        }
+      },
+      {
+        "conditions":"hum < 102 && temp > 154",
+        "definitions":{
+          "textures": {
+            "0": "grassDesert",
+            "1": "grassTermite1",
+            "2": "grassTermite2",
+            "3": "grassDLeaf",
+            "4": "grassFeather"
+          }
+        }
+      }
+    ]
+  }

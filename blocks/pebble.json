@@ -1,0 +1,24 @@
+{
+    "definitions": {
+      "id":6,
+      "textures": {
+        "0": "stone"
+      },
+      "geometry": "pebble",
+      "box":{ "w":0, "h":0, "d":0 }
+    },
+    "behavior": {
+      "surface": {
+        "friction": 0.9,
+        "elasticity": 0.05
+      },
+      "structure": {
+        "mass": 0,
+        "support": false
+      },
+      "breaking": {
+        "duration": 1000,
+        "method": "quarry"
+      }
+    }
+  }
