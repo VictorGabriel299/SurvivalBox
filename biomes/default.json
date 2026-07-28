@@ -1,0 +1,23 @@
+{
+  "id":"grassland",
+  "layers":{
+    "foliage":[
+      {"id":4,"weight":12.5},
+      {"id":4,"texture":1,"weight":12.5},
+      {"id":4,"texture":2,"weight":12.5},
+      {"id":4,"texture":3,"weight":12.5},
+      {"id":6,"weight":12.5},
+      {"id":0,"weight":12.5},
+    ],
+    "surface":[
+      {"id":1,"texture":1,"weight":5},
+      {"id":1,"texture":2,"weight":5},
+      {"id":1,"texture":3,"weight":5},
+      {"id":1,"texture":4,"weight":5},
+      {"id":1,"weight":80}
+    ],
+    "bellowSurface":{"id":2,"texture":1},
+    "soil":{"id":2},
+    "bellowSurface":{"id":3},
+  }
+}
