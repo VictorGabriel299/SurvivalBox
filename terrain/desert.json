@@ -1,0 +1,18 @@
+{
+  "id":"desert",
+  "priority":0,
+  "humRange":[0,0.4],
+  "tempRange":[0.6,1],
+  "layers":{
+    "surface":[
+      {"id":1,"texture":1,"weight":0.1},
+      {"id":1,"texture":2,"weight":0.1},
+      {"id":1,"texture":3,"weight":0.1},
+      {"id":1,"texture":4,"weight":0.1},
+      {"id":1,"weight":1.6},
+      {"id":5,"weight":98}
+    ],
+    "bellowSurface":{"id":5},
+    "soil":{"id":5}
+  }
+}
