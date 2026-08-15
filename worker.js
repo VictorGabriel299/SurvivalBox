@@ -426,12 +426,11 @@ function generateChunk(cx,cz,pending){
 }
 
 onmessage = (event) => {
-  console.error("oi")
     const ev=event.data
   if(ev.quest==="init")initGenerator(ev.data)
   else if(ev.quest==="generate"){
      const key=ev.data.cx+","+ev.data.cz
      generateChunk(ev.data.cx,ev.data.cz,ev.data.pending)
-     self.postMessage({key,res,pend:nChunks})
+     postMessage({key,res,pend:nChunks})
   }
 }
