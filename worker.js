@@ -1,4 +1,3 @@
-console.log("ao")
 let featureRules={}
 let features={}
 let biomes=[]
@@ -421,13 +420,10 @@ function generateChunk(cx,cz,pending){
         }
     }
 
-   
-
     return res
 }
 
 onmessage = (event) => {
-  console.log("ao")
   const ev=event.data
   if(ev.quest==="init")initGenerator(ev.data)
   else if(ev.quest==="generate"){
