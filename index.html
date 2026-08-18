@@ -923,6 +923,43 @@ function buildGeometry(data) {
   return geometry;
 }
 
+function serializeGeometriesForWorker(){
+  const result={}
+
+  for(const [name,geo] of Object.entries(geometries)){
+    const position=geo.getAttribute("position")
+    const normal=geo.getAttribute("normal")
+    const uv=geo.getAttribute("uv")
+    const index=geo.getIndex()
+
+    result[name]={
+      position:position
+        ?new Float32Array(position.array)
+        :null,
+
+      normal:normal
+        ?new Float32Array(normal.array)
+        :null,
+
+      uv:uv
+        ?new Float32Array(uv.array)
+        :null,
+
+      index:index
+        ?(
+          index.array instanceof Uint32Array
+            ?new Uint32Array(index.array)
+            :new Uint16Array(index.array)
+        )
+        :null,
+
+      vertexCount:position?.count??0
+    }
+  }
+
+  return result
+}
+
 // textures, geometries & animations
 
 const blockTextures = {
@@ -2289,14 +2326,9 @@ const unloadQueue=new Set()
 const meshQueue=new Set()
 const chunksPerFrame = 4
 let generatingChunk=false
+let meshingChunk=false
 const chunkWorker=new Worker("./worker.js")
-
-const workerUrl = "https://cdn.jsdelivr.net/gh/VictorGabriel299/SurvivalBox@main/worker.js";
-
-fetch(workerUrl)
-  .then(r => {
-    console.log("Content-Type:", r.headers.get("content-type"));
-  });
+const meshWorker=new Worker("./meshWorker.js")
 
 chunkWorker.postMessage({
   quest:"init",
@@ -2311,6 +2343,37 @@ chunkWorker.postMessage({
     heightDeform
   }
 })
+/*
+meshWorker.postMessage({
+  quest:"init",
+  data:{
+    worldHeight,
+    blockJsons,
+    geometries,
+    blockMaterials,
+    transparentBlocksID,
+  }
+})
+*/
+
+const workerGeometries=serializeGeometriesForWorker()
+const geometryTransferBuffers=[]
+for(const geometry of Object.values(workerGeometries)){
+   if(geometry.position)geometryTransferBuffers.push(geometry.position.buffer)
+   if(geometry.normal)geometryTransferBuffers.push(geometry.normal.buffer)
+   if(geometry.uv)geometryTransferBuffers.push(geometry.uv.buffer)
+  if(geometry.index)geometryTransferBuffers.push(geometry.index.buffer)
+}
+worker.postMessage({
+   quest:"init",
+   data:{
+      worldHeight,
+      blockJsons,
+      geometries:workerGeometries,
+      blockMaterials,
+      transparentBlocksID
+   }
+},geometryTransferBuffers)
 
 let chunkSlice=0
 function processQueues(){
@@ -2334,7 +2397,7 @@ function processQueues(){
   if(chunkQueue.length>0&&!generatingChunk){
     while(chunkQueue.length>0){
       let task=chunkQueue[0]
-      if(!task)break
+      if(!task)continue
       
       const key=task.cx+","+task.cz
       const pcx=Math.floor(player?.pos.x/blockSize)>>4
@@ -2357,7 +2420,37 @@ function processQueues(){
     }
   }
 
-  if(meshQueue.size>0){
+  if(meshQueue.size>0&&!meshingChunk){
+    while(meshQueue.size>0){
+      let task=meshQueue.values().next().value
+      if(!task)continue
+      const [cx,cz]=key.split(",").map(Number)
+      
+      const pcx=Math.floor(player?.pos.x/blockSize)>>4
+      const pcz=Math.floor(player?.pos.z/blockSize)>>4
+      const chunk=chunks.get(task)
+      const dist=Math.abs(cx-pcx)+Math.abs(cz-pcz)
+      if(dist>renderChunks||unloadQueue.has(task)||!chunk){
+        meshQueue.delete(task)
+        continue
+      }
+      
+      const oldMesh=chunkMeshes.get(task)
+      if(oldMesh){
+        blocksGroup.remove(oldMesh)
+        oldMesh.dispose?.()
+      }
+      meshWorker.postMessage({
+        quest:"mesh",
+        data:{
+         chunk
+       }
+     })
+     meshingChunk=true
+     break
+    }
+    
+    /*
     let i=0
     for(const key of meshQueue){
       if(i++>=chunksPerFrame)break
@@ -2377,14 +2470,15 @@ function processQueues(){
       }else chunkMeshes.delete(key)
       meshQueue.delete(key)
     }
+    */
   }
 }
 chunkWorker.onmessage=(event)=>{
-    console.log("oi")
     chunkQueue.shift()
     generatingChunk=false
     const ev=event.data
     chunks.set(ev.key,ev.res)
+    meshQueue.add(ev.key)
     if(ev.pend.size>0)for(const [key,pending] of ev.pend){
      const pendChunk=chunks.get(key)
      if(pendChunk)for(const [i,block] of pending)pendChunk.blocks[i]=block
@@ -2398,6 +2492,69 @@ chunkWorker.onmessage=(event)=>{
        }
      }
   }
+}
+
+meshWorker.onmessage=(event)=>{
+    meshQueue.delete(meshQueue.values().next().value)
+    meshingChunk=false
+    const ev=event.data
+    const key=ev.cx+","+ev.cz
+    if(!ev||!ev.positions?.length){
+        chunkMeshes.delete(key)
+        return
+    }
+    const geometry=new THREE.BufferGeometry()
+    geometry.setAttribute(
+        "position",
+        new THREE.BufferAttribute(ev.positions,3)
+    )
+    geometry.setAttribute(
+        "normal",
+        new THREE.BufferAttribute(ev.normals,3)
+    )
+    geometry.setAttribute(
+        "uv",
+        new THREE.BufferAttribute(ev.uvs,2)
+    )
+    geometry.setIndex(
+        new THREE.BufferAttribute(ev.indices,1)
+    )
+    for(const group of ev.groups){
+        geometry.addGroup(
+            group.start,
+            group.count,
+            group.materialIndex
+        )
+    }
+    geometry.computeBoundingBox()
+    geometry.computeBoundingSphere()
+    const mesh=new THREE.Mesh(
+        geometry,
+        materialList
+    )
+    mesh.position.set(
+        ev.cx*16*blockSize,
+        0,
+        ev.cz*16*blockSize
+    )
+    mesh.castShadow=true
+    mesh.receiveShadow=true
+    const newMesh=new THREE.Group()
+    newMesh.add(mesh)
+    newMesh.userData.bounds=new THREE.Box3(
+        new THREE.Vector3(
+            ev.cx*16*blockSize,
+            0,
+            ev.cz*16*blockSize
+        ),
+        new THREE.Vector3(
+            (ev.cx*16+16)*blockSize,
+            worldHeight*blockSize,
+            (ev.cz*16+16)*blockSize
+        )
+    )
+    blocksGroup.add(newMesh)
+    chunkMeshes.set(key,newMesh)
 }
 
 function getBlockType(wx, wy, wz) {
