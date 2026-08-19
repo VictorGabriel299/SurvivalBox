@@ -317,12 +317,6 @@ for(const func of ["log","info","debug","warn","error"]){
     logs.push(msg)
     if(logs.length>5)logs.shift()
     if(func==="warn"||func==="error")alert(msg)
-    
-    devText=""
-    for(let i=0; i<logs.length; i++){
-      devText+=`${logs[i]}\n`
-    }
-    debug.innerText=devtext
   }
 }
 
@@ -2376,8 +2370,9 @@ meshWorker.postMessage({
 },geometryTransferBuffers)
 
 let chunkSlice=0
+console.log("a")
 function processQueues(){
-  console.log("a")
+  console.log("b")
   if(unloadQueue.size>0){
     let i=0
     for(const key of unloadQueue){
@@ -2423,10 +2418,10 @@ function processQueues(){
 
   if(meshQueue.size>0&&!meshingChunk){
     while(meshQueue.size>0){
-      console.log("b")
+      console.log("c")
       let task=meshQueue.values().next().value
       if(!task)continue
-      const [cx,cz]=key.split(",").map(Number)
+      const [cx,cz]=task.split(",").map(Number)
       
       const pcx=Math.floor(player?.pos.x/blockSize)>>4
       const pcz=Math.floor(player?.pos.z/blockSize)>>4
@@ -2475,7 +2470,6 @@ function processQueues(){
     */
   }
 }
-console.log("c")
 chunkWorker.onmessage=(event)=>{
     chunkQueue.shift()
     generatingChunk=false
@@ -2498,15 +2492,15 @@ chunkWorker.onmessage=(event)=>{
 }
 
 meshWorker.onmessage=(event)=>{
-  console.log("d")
+    console.log("d")
     meshQueue.delete(meshQueue.values().next().value)
     meshingChunk=false
     const ev=event.data
+    const key=ev.cx+","+ev.cz
     if(!ev||!ev.positions?.length){
         chunkMeshes.delete(key)
         return
     }
-    const key=ev.cx+","+ev.cz
     const geometry=new THREE.BufferGeometry()
     geometry.setAttribute(
         "position",
@@ -3506,7 +3500,7 @@ function loop(){
     for(let i=0; i<logs.length; i++){
       devText+=`${logs[i]}\n`
     }
-    debug.innerText=`${player?.pos.y/blockSize}\ndevText`
+    debug.innerText=(player?.pos.y/blockSize)+"\n"+devText
         
         const pcx = 
         Math.floor(player.pos.x/blockSize)>>4
