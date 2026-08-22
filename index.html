@@ -2392,6 +2392,8 @@ function processQueues(){
       const oldMesh=chunkMeshes.get(cx+","+cz)
       if(oldMesh){
        try{
+       const oldMeshData=chunkMeshData.get(cx+","+cz)
+
        meshWorker.postMessage({
           quest:"refresh",
           data:{
@@ -2401,9 +2403,15 @@ function processQueues(){
             x:x??0,
             y:y??0,
             z:z??0,
-            mesh:oldMesh
+            meshData:oldMeshData
           }
-       })
+       },[
+          oldMeshData.positions.buffer,
+          oldMeshData.normals.buffer,
+          oldMeshData.uvs.buffer,
+          oldMeshData.indices.buffer
+       ])
+
        meshingChunk=true
        blocksGroup.remove(oldMesh)
        oldMesh.dispose?.()
