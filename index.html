@@ -2383,9 +2383,9 @@ function processQueues(){
       
       const pcx=Math.floor(player?.pos.x/blockSize)>>4
       const pcz=Math.floor(player?.pos.z/blockSize)>>4
-      const chunk=chunks.get(task)
+      const chunk=chunks.get(cx+","+cz)
       const dist=Math.abs(cx-pcx)+Math.abs(cz-pcz)
-      if(dist>renderChunks||unloadQueue.has(task)||!chunk){
+      if(dist>renderChunks||unloadQueue.has(cx+","+cz)||!chunk){
         meshQueue.delete(task)
         continue
       }
