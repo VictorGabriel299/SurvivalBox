@@ -1113,6 +1113,48 @@ function serializeGeometriesForWorker(){
   return result
 }
 
+function serializeGeometry(geometry){
+  const result={}
+
+  for(const [name,attribute] of Object.entries(geometry.attributes)){
+    result[name]=
+      attribute.array instanceof Float32Array
+        ?new Float32Array(attribute.array)
+        :attribute.array instanceof Uint32Array
+          ?new Uint32Array(attribute.array)
+          :attribute.array instanceof Uint16Array
+            ?new Uint16Array(attribute.array)
+            :attribute.array instanceof Uint8Array
+              ?new Uint8Array(attribute.array)
+              :new attribute.array.constructor(attribute.array)
+  }
+
+  const index=geometry.getIndex()
+
+  return{
+    attributes:result,
+
+    index:index
+      ?(
+        index.array instanceof Uint32Array
+          ?new Uint32Array(index.array)
+          :index.array instanceof Uint16Array
+            ?new Uint16Array(index.array)
+            :new Uint8Array(index.array)
+      )
+      :null,
+
+    groups:geometry.groups.map(group=>({
+      start:group.start,
+      count:group.count,
+      materialIndex:group.materialIndex
+    })),
+
+    vertexCount:
+      geometry.getAttribute("position")?.count??0
+  }
+}
+
 // textures, geometries & animations
 
 const blockTextures = {
@@ -2392,7 +2434,7 @@ function processQueues(){
       const oldMesh=chunkMeshes.get(cx+","+cz)
       if(oldMesh){
        try{
-       const oldMeshData=chunkMeshData.get(cx+","+cz)
+       const oldMeshData=serializeGeometry(oldMesh.geometry)
 
        meshWorker.postMessage({
           quest:"refresh",
@@ -2403,7 +2445,7 @@ function processQueues(){
             x:x??0,
             y:y??0,
             z:z??0,
-            meshData:oldMeshData
+            mesh:oldMeshData
           }
        },[
           oldMeshData.positions.buffer,
