@@ -1114,45 +1114,92 @@ function serializeGeometriesForWorker(){
 }
 
 function serializeGeometry(geometry){
-  const result={}
+   const position=
+      geometry.getAttribute("position")
 
-  for(const [name,attribute] of Object.entries(geometry.attributes)){
-    result[name]=
-      attribute.array instanceof Float32Array
-        ?new Float32Array(attribute.array)
-        :attribute.array instanceof Uint32Array
-          ?new Uint32Array(attribute.array)
-          :attribute.array instanceof Uint16Array
-            ?new Uint16Array(attribute.array)
-            :attribute.array instanceof Uint8Array
-              ?new Uint8Array(attribute.array)
-              :new attribute.array.constructor(attribute.array)
-  }
+   const normal=
+      geometry.getAttribute("normal")
 
-  const index=geometry.getIndex()
+   const uv=
+      geometry.getAttribute("uv")
 
-  return{
-    attributes:result,
+   const index=
+      geometry.getIndex()
 
-    index:index
-      ?(
-        index.array instanceof Uint32Array
-          ?new Uint32Array(index.array)
-          :index.array instanceof Uint16Array
-            ?new Uint16Array(index.array)
-            :new Uint8Array(index.array)
+   const positions=
+      new Float32Array(
+         position?.array??0
       )
-      :null,
 
-    groups:geometry.groups.map(group=>({
-      start:group.start,
-      count:group.count,
-      materialIndex:group.materialIndex
-    })),
+   const normals=
+      new Float32Array(
+         normal?.array??0
+      )
 
-    vertexCount:
-      geometry.getAttribute("position")?.count??0
-  }
+   const uvs=
+      new Float32Array(
+         uv?.array??0
+      )
+
+   let indices
+
+   if(index){
+      if(index.array instanceof Uint32Array){
+         indices=
+            new Uint32Array(index.array)
+      }else if(index.array instanceof Uint16Array){
+         indices=
+            new Uint16Array(index.array)
+      }else{
+         indices=
+            new Uint8Array(index.array)
+      }
+   }else{
+      const vertexCount=
+         position?.count??0
+
+      indices=
+         vertexCount>65535
+            ?new Uint32Array(vertexCount)
+            :new Uint16Array(vertexCount)
+
+      for(let i=0;i<vertexCount;i++)
+         indices[i]=i
+   }
+
+   return{
+      positions,
+      normals,
+      uvs,
+      indices,
+
+      groups:
+         geometry.groups.map(group=>({
+            start:group.start,
+            count:group.count,
+            materialIndex:group.materialIndex
+         })),
+
+      vertexCount:
+         position?.count??0,
+
+      indexCount:
+         indices.length,
+
+      bounds:{
+         min:{
+            x:geometry.boundingBox?.min.x??0,
+            y:geometry.boundingBox?.min.y??0,
+            z:geometry.boundingBox?.min.z??0
+         },
+
+         max:{
+            x:geometry.boundingBox?.max.x??0,
+            y:geometry.boundingBox?.max.y??0,
+            z:geometry.boundingBox?.max.z??0
+         }
+      }
+   }
 }
 
 // textures, geometries & animations
@@ -2448,10 +2495,10 @@ function processQueues(){
             mesh:oldMeshData
           }
        },[
-          oldMeshData.attributes.position.buffer,
-          oldMeshData.attributes.normal.buffer,
-          oldMeshData.attributes.uv.buffer,
-          ...(oldMeshData.index?[oldMeshData.index.buffer]:[])
+          oldMeshData.positions.buffer,
+          oldMeshData.normals.buffer,
+          oldMeshData.uvs.buffer,
+          oldMeshData.indices.buffer
        ])
 
        meshingChunk=true
