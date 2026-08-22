@@ -2253,7 +2253,6 @@ class Chunk{
     
     static refresh(key,pos){
        const meshKey=key+","+(pos.x&15) +","+(pos.y&15)+","+(pos.z&15)
-       console.log("a", meshKey)
        meshQueue.add(meshKey)
     }
     
@@ -2392,7 +2391,7 @@ function processQueues(){
       
       const oldMesh=chunkMeshes.get(cx+","+cz)
       if(oldMesh){
-       console.warn("b",typeof oldMesh,typeof chunk, cx, cz, x,y,z)
+       try{
        meshWorker.postMessage({
           quest:"refresh",
           data:{
@@ -2408,6 +2407,7 @@ function processQueues(){
        meshingChunk=true
        blocksGroup.remove(oldMesh)
        oldMesh.dispose?.()
+       }catch(e){ console.warn(e.message) }
        break
       }
       meshWorker.postMessage({
