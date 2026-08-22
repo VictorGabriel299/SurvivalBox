@@ -2434,6 +2434,7 @@ function processQueues(){
       const oldMesh=chunkMeshes.get(cx+","+cz)
       if(oldMesh){
        try{
+       console.warn(typeof oldMesh, typeof oldMesh.geometry)
        const oldMeshData=serializeGeometry(oldMesh.geometry)
 
        meshWorker.postMessage({
