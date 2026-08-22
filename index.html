@@ -2448,10 +2448,10 @@ function processQueues(){
             mesh:oldMeshData
           }
        },[
-          oldMeshData.positions.buffer,
-          oldMeshData.normals.buffer,
-          oldMeshData.uvs.buffer,
-          oldMeshData.indices.buffer
+          oldMeshData.attributes.position.buffer,
+          oldMeshData.attributes.normal.buffer,
+          oldMeshData.attributes.uv.buffer,
+          ...(oldMeshData.index?[oldMeshData.index.buffer]:[])
        ])
 
        meshingChunk=true
