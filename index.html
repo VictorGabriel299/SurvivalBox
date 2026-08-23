@@ -2521,6 +2521,7 @@ function processQueues(){
   }
 }
 chunkWorker.onmessage=(event)=>{
+  console.log("a")
   try{
     chunkQueue.shift()
     generatingChunk=false
