@@ -2521,7 +2521,6 @@ function processQueues(){
   }
 }
 chunkWorker.onmessage=(event)=>{
-  console.log("a")
   try{
     chunkQueue.shift()
     generatingChunk=false
@@ -2546,7 +2545,10 @@ chunkWorker.onmessage=(event)=>{
  }
 }
 
+let meshWorkerIndexLog=0
 meshWorker.onmessage=(event)=>{
+  meshWorkerIndexLog=(meshWorkerIndexLog+1)%2
+  console.log(meshWorkerIndexLog?"a":"b")
   try{
     meshingChunk=false
     const ev=event.data
