@@ -1727,6 +1727,7 @@ onmessage=(event)=>{
       chunk=ev.data.chunk
       chunkCX=ev.data.cx??0
       chunkCZ=ev.data.cz??0
+      prepareChunkCache()
       
       const result=
          refreshChunkMesh(
