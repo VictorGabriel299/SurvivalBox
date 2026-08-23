@@ -2545,10 +2545,7 @@ chunkWorker.onmessage=(event)=>{
  }
 }
 
-let meshWorkerIndexLog=0
 meshWorker.onmessage=(event)=>{
-  meshWorkerIndexLog=(meshWorkerIndexLog+1)%2
-  console.log(meshWorkerIndexLog?"a":"b")
   try{
     meshingChunk=false
     const ev=event.data
@@ -2557,10 +2554,10 @@ meshWorker.onmessage=(event)=>{
       meshQueue.delete(meshQueue.values().next().value)
       return
     }
-    const key=ev.cx+","+ev.cz
-    meshQueue.delete(key)
+    const cKey=ev.cx+","+ev.cz
+    meshQueue.delete(ev.qKey)
     if(!res||!res.positions?.length){
-        chunkMeshes.set(key,null)
+        chunkMeshes.set(cKey,null)
         return
     }
     const geometry=new THREE.BufferGeometry()
@@ -2614,7 +2611,7 @@ meshWorker.onmessage=(event)=>{
         )
     )
     blocksGroup.add(newMesh)
-    chunkMeshes.set(key,newMesh)
+    chunkMeshes.set(cKey,newMesh)
   } catch(e){
    console.error("[MESH THREAD] -",e.message)
  }

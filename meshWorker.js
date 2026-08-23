@@ -1714,7 +1714,8 @@ onmessage=(event)=>{
          {
             result,
             cx:chunkCX,
-            cz:chunkCZ
+            cz:chunkCZ,
+            qKey:chunkCX+","+chunkCZ
          },
          [
             result.positions.buffer,
@@ -1743,7 +1744,8 @@ onmessage=(event)=>{
          {
             result,
             cx:chunkCX,
-            cz:chunkCZ
+            cz:chunkCZ,
+            qKey: `${chunkCX},${chunkCZ},${ev.data.x},${ev.data.y},${ev.data.z}`
          },
          [
             result.positions.buffer,
